@@ -14,8 +14,6 @@ from ev3dev2.wheel import *
 ON = True
 OFF = False
 
-
-
 def debug_print(*args, **kwargs):
     '''Print debug messages to stderr.
 
