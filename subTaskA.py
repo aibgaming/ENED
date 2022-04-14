@@ -47,7 +47,10 @@ def move_front(tankpair, distance):
     tankpair.on_for_seconds(70,70, distance/ROBO_SPEED)
 
 def turn(tankpair, direction):
-    tankpair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
+    if direction==-1:
+        tankpair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
+    elif direction==1:
+        tankpair.on_for_seconds(0,-70, 90/ANGULAR_ROBO_SPEED)
 
 def read_colour(color_sensor):
     col = 0
@@ -55,6 +58,7 @@ def read_colour(color_sensor):
         col = 0
     elif color_sensor.color() == COLOR_BLACK:
         col = 1
+
     return col
 
 
@@ -65,19 +69,20 @@ set_font('Lat15-Terminus24x12')
 print('Hello there!')
 
 tank_pair = MoveTank(OUTPUT_D, OUTPUT_B)
-gy = GyroSensor(INPUT_1)
+lift = MediumMotor(OUTPUT_C)
+#gy = GyroSensor(INPUT_1)
 colS = ColorSensor(INPUT_2)
 
 ROBO_SPEED = 9.5 #Inch/second
 ANGULAR_ROBO_SPEED = 90 #degrees/second
-gy.reset()
-gy.calibrate()
+# gy.reset()
+# gy.calibrate()
 
-#main program
 
-tank_pair.on_for_seconds(70,70, 84/ROBO_SPEED)
-
-sleep(20)
+turn(tank_pair, 1)
+move_front(tank_pair, 2)
+sleep(2)
+lift.on_for_seconds(-90, 2)
 
 
 
@@ -86,11 +91,6 @@ sleep(20)
 
 # tank_pair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
 # tank_pair.on_for_seconds(70,70, 96/ROBO_SPEED)
-
-
-
-
-
 
 # tire_class = EV3Tire
 # mdiff = MoveDifferential(OUTPUT_D, OUTPUT_B, tire_class, 118)
