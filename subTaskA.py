@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from curses import COLOR_BLACK, COLOR_WHITE
 import os,sys
 from sre_constants import CALL
 from time import sleep
@@ -42,6 +43,19 @@ def set_font(name):
     '''
     os.system('setfont ' + name)
 
+def move_front(tankpair, distance):
+    tankpair.on_for_seconds(70,70, distance/ROBO_SPEED)
+
+def turn(tankpair, direction):
+    tankpair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
+
+def read_colour(color_sensor):
+    col = 0
+    if color_sensor.color() == COLOR_WHITE:
+        col = 0
+    elif color_sensor.color() == COLOR_BLACK:
+        col = 1
+    return col
 
 
 # set the console just how we want it
@@ -50,25 +64,34 @@ set_cursor(OFF)
 set_font('Lat15-Terminus24x12')
 print('Hello there!')
 
-num_laps = 4
-
-# steer_pair = MoveSteering(OUTPUT_D,OUTPUT_B)
-# steer_pair.on_for_seconds(steering=0, speed=50, seconds=2)
-
 tank_pair = MoveTank(OUTPUT_D, OUTPUT_B)
+gy = GyroSensor(INPUT_1)
+colS = ColorSensor(INPUT_2)
 
 ROBO_SPEED = 9.5 #Inch/second
 ANGULAR_ROBO_SPEED = 90 #degrees/second
+gy.reset()
+gy.calibrate()
+
+#main program
 
 tank_pair.on_for_seconds(70,70, 84/ROBO_SPEED)
-# tank_pair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
-# tank_pair.on_for_seconds(70,70, 96/ROBO_SPEED)
 
 sleep(20)
 
 
-# Y_DIST = 900
-# gy = GyroSensor(INPUT_2)
+
+# steer_pair = MoveSteering(OUTPUT_D,OUTPUT_B)
+# steer_pair.on_for_seconds(steering=0, speed=50, seconds=2)
+
+# tank_pair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
+# tank_pair.on_for_seconds(70,70, 96/ROBO_SPEED)
+
+
+
+
+
+
 # tire_class = EV3Tire
 # mdiff = MoveDifferential(OUTPUT_D, OUTPUT_B, tire_class, 118)
 # sound = Sound()
@@ -76,7 +99,6 @@ sleep(20)
 
 # mdiff.odometry_start()
 # list = []
-# INITIAL_ANGLE = gy.angle
 # list.append(INITIAL_ANGLE)
 
 
