@@ -43,8 +43,9 @@ def set_font(name):
     '''
     os.system('setfont ' + name)
 
+#my functions
 def move_front(tankpair, distance):
-    tankpair.on_for_seconds(70,70, distance/ROBO_SPEED)
+    tankpair.on_for_seconds(69.5,70, distance/ROBO_SPEED, False)
 
 def turn(tankpair, direction):
     if direction==-1:
@@ -61,6 +62,9 @@ def read_colour(color_sensor):
 
     return col
 
+def brake_robot(tankpair):
+    tankpair.off(brake=True)
+
 
 # set the console just how we want it
 reset_console()
@@ -73,19 +77,40 @@ lift = MediumMotor(OUTPUT_C)
 #gy = GyroSensor(INPUT_1)
 colS = ColorSensor(INPUT_2)
 
+#ults = UltrasonicSensor(INPUT_3)
+# if (ults.MODE_US_DIST_IN < 1):
+#     brake_robot(tank_pair)
+
 ROBO_SPEED = 9.5 #Inch/second
 ANGULAR_ROBO_SPEED = 90 #degrees/second
-# gy.reset()
-# gy.calibrate()
-
-
-turn(tank_pair, 1)
-move_front(tank_pair, 2)
-sleep(2)
-lift.on_for_seconds(-90, 2)
 
 
 
+
+
+# turn(tank_pair, 1)
+# sleep(2)
+
+# move_front(tank_pair, 2)
+
+# sleep(1)
+# lift.on_for_seconds(-90, 0.5)
+# turn(tank_pair, -1)
+
+# sleep(1)
+# move_front(tank_pair, 10)
+# lift.on_for_seconds(90, 0.5)
+
+
+
+sound = Sound()
+
+sound.speak("Hello")
+
+for i in range(100):
+    move_front(tank_pair,1)
+
+###########################################################################################################################
 # steer_pair = MoveSteering(OUTPUT_D,OUTPUT_B)
 # steer_pair.on_for_seconds(steering=0, speed=50, seconds=2)
 
