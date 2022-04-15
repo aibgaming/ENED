@@ -2,6 +2,7 @@
 
 from curses import COLOR_BLACK, COLOR_WHITE
 import os,sys
+from shutil import move
 from sre_constants import CALL
 from time import sleep
 from ev3dev.ev3 import *
@@ -52,22 +53,29 @@ def move_back(tankpair, distance):
 
 def turn(tankpair, direction, gyrosens):
     gyrosens.reset()
-
     if direction==-1:
-        while gyrosens.angle() > -90:
-            tankpair.on_for_seconds(0,70, 1, False)
+        while gyrosens.angle > -90:
+            tankpair.on_for_seconds(0,50, 0.05, False)
     elif direction==1:
-        while gyrosens.angle() < 90:
-            tankpair.on_for_seconds(0,-70, 1, False)
+        while gyrosens.angle < 90:
+            tankpair.on_for_seconds(0,-50, 0.05, False)
 
 def read_colour(color_sensor):
     col = 0
-    if color_sensor.color() == COLOR_WHITE:
+    if color_sensor.color() == 6:
         col = 0
-    elif color_sensor.color() == COLOR_BLACK:
+    elif color_sensor.color() == 1:
         col = 1
-
     return col
+
+def read_black(color_sensor):
+    perc = color_sensor.reflected_light_intensity
+    if perc < 9:
+        return 5
+    elif perc < 40:
+        return 1
+    else:
+        return 0
 
 def brake_robot(tankpair):
     tankpair.off(brake=True)
@@ -90,4 +98,16 @@ sound = Sound()
 #     brake_robot(tank_pair)
 
 ROBO_SPEED = 9.5 #Inch/second
-sound.speak("Hello")
+
+turn(tank_pair,1, gy)
+move_back(tank_pair,3)
+sleep(1)
+move_front(tank_pair, 6)
+sleep(1)
+lift.on_for_seconds(-50, 1)
+move_back(tank_pair,6)
+turn(tank_pair,-1, gy)
+move_front(tank_pair, 27)
+lift.on_for_seconds(50, 1)
+move_back(tank_pair,3)
+

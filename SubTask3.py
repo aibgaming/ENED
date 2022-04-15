@@ -53,22 +53,29 @@ def move_back(tankpair, distance):
 
 def turn(tankpair, direction, gyrosens):
     gyrosens.reset()
-
     if direction==-1:
-        while gyrosens.angle() > -90:
-            tankpair.on_for_seconds(0,70, 1, False)
+        while gyrosens.angle > -90:
+            tankpair.on_for_seconds(0,50, 0.05, False)
     elif direction==1:
-        while gyrosens.angle() < 90:
-            tankpair.on_for_seconds(0,-70, 1, False)
+        while gyrosens.angle < 90:
+            tankpair.on_for_seconds(0,-50, 0.05, False)
 
 def read_colour(color_sensor):
     col = 0
-    if color_sensor.color() == COLOR_WHITE:
+    if color_sensor.color() == 6:
         col = 0
-    elif color_sensor.color() == COLOR_BLACK:
+    elif color_sensor.color() == 1:
         col = 1
-
     return col
+
+def read_black(color_sensor):
+    perc = color_sensor.reflected_light_intensity
+    if perc < 9:
+        return 5
+    elif perc < 40:
+        return 1
+    else:
+        return 0
 
 def brake_robot(tankpair):
     tankpair.off(brake=True)
@@ -94,7 +101,7 @@ barcode1 = [1, 0, 0, 0]
 barcode2 = [1, 0, 1, 0]
 barcode3 = [1, 1, 0, 0]
 barcode4 = [1, 0, 0, 1]
-
+mybarcode = []
 ROBO_SPEED = 9.5 #Inch/second
 
 reqDist = 9 # middle of previous box
@@ -103,16 +110,31 @@ move_front(tank_pair, 30)
 turn(tank_pair, 1, gy)
 move_front(tank_pair, (6 + reqDist) )
 
-while read_colour(colS)!=1:
-    move_front(tank_pair,1)
+run_code = True
+while run_code:
+    sleep(0.25)
+    if read_black(colS) == 1:
+        mybarcode.append(1)
+    elif read_black(colS) == 0:
+        mybarcode.append(0)
+    else:
+        if len(mybarcode) > 3:
+            run_code = False
+    move_front(tank_pair,0.35)
 
-mybarcode = [1]
-move_front(tank_pair,0.5)
-mybarcode.append(read_colour(colS))
-move_front(tank_pair,0.5)
-mybarcode.append(read_colour(colS))
-move_front(tank_pair,0.5)
-mybarcode.append(read_colour(colS))
+mybarcode = mybarcode[-4:]
+if mybarcode==barcode1:
+    print(mybarcode)
+    print("Barcode number 1")
+elif mybarcode==barcode2:
+    print(mybarcode)
+    print("Barcode number 2")
+elif mybarcode==barcode3:
+    print(mybarcode)
+    print("Barcode number 3")
+else:
+    print(mybarcode)
+    print("Barcode number 4")
 
-debug_print(mybarcode)
-print(mybarcode)
+sleep(10)
+

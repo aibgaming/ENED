@@ -50,27 +50,43 @@ def move_front(tankpair, distance):
     tankpair.on_for_seconds(69.5,70, distance/ROBO_SPEED, False)
 
 def move_back(tankpair, distance):
-    tankpair.on_for_seconds(-69.5,-70, distance/ROBO_SPEED, False)
+    tankpair.on_for_seconds(-70,-70, distance/ROBO_SPEED, False)
+
+def go_for_dist(tankpair, distance, gyro):
+    for i in range(distance):
+        gyro.reset()
+        move_front(tankpair,1)
+        if gyro.angle < -1:
+            tankpair.on_for_seconds(0,25, 0.05, False)
+        elif gyro.angle > 1:
+            tankpair.on_for_seconds(0,-25, 0.05, False)
 
 def turn(tankpair, direction, gyrosens):
     gyrosens.reset()
-
     if direction == -1:
-        while gyrosens.angle() > -90:
-            tankpair.on_for_seconds(0,70, 1, False)
-
+        while gyrosens.angle > -90:
+            tankpair.on_for_seconds(0,50, 0.05, False)
     elif direction == 1:
-        while gyrosens.angle() < 90:
-            tankpair.on_for_seconds(0,-70, 1, False)
+        while gyrosens.angle < 90:
+            tankpair.on_for_seconds(0,-50, 0.05, False)
+
 
 def read_colour(color_sensor):
     col = 0
-    if color_sensor.color() == COLOR_WHITE:
+    if color_sensor.color() == 6:
         col = 0
-    elif color_sensor.color() == COLOR_BLACK:
+    elif color_sensor.color() == 1:
         col = 1
-
     return col
+
+def read_black(color_sensor):
+    perc = color_sensor.reflected_light_intensity
+    if perc < 9:
+        return 5
+    elif perc < 40:
+        return 1
+    else:
+        return 0
 
 def brake_robot(tankpair):
     tankpair.off(brake=True)
@@ -93,21 +109,29 @@ sound = Sound()
 #     brake_robot(tank_pair)
 
 ROBO_SPEED = 9.5 #Inch/second
-reqDist = 15 # middle of my box
+reqDist = 3 # middle of my box
+
 
 move_front(tank_pair, 30)
 turn(tank_pair, 1, gy)
-move_front(tank_pair, (6 + reqDist) )   # 21 = 6 + 15
+
+move_front(tank_pair, (6 + reqDist) )   # 39 = 6 + 33
 sound.speak("Stopping")
 sleep(5)
-move_front(tank_pair, 102 - (6 + reqDist) )
+move_front(tank_pair, 102 - (6 + reqDist))
+gy.reset
 turn(tank_pair, 1, gy)
 move_front(tank_pair, 30)
 
 sleep(2)
+sound.speak("Starting Subtask2")
 #subtask2
 move_back(tank_pair, 6)
 turn(tank_pair, 1, gy)
 move_front(tank_pair, 96)
 turn(tank_pair, -1, gy)
-move_front(tank_pair, 6)
+move_front(tank_pair, 6,gy)
+
+
+# move_front(tank_pair, 100)
+

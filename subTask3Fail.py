@@ -94,45 +94,41 @@ sound = Sound()
 # if (ults.MODE_US_DIST_IN < 1):
 #     brake_robot(tank_pair)
 
+
+
+barcode1 = [1, 0, 0, 0]
+barcode2 = [1, 0, 1, 0]
+barcode3 = [1, 1, 0, 0]
+barcode4 = [1, 0, 0, 1]
+mybarcode = []
 ROBO_SPEED = 9.5 #Inch/second
 
+run_code = True
+while run_code:
+    sleep(0.25)
+    if read_black(colS) == 1:
+        mybarcode.append(1)
+    elif read_black(colS) == 0:
+        mybarcode.append(0)
+    else:
+        if len(mybarcode) > 3:
+            run_code = False
+
+    move_front(tank_pair,0.35)
 
 
+mybarcode = mybarcode[-4:]
+if mybarcode==barcode1:
+    print(mybarcode)
+    print("Barcode number 1")
+elif mybarcode==barcode2:
+    print(mybarcode)
+    print("Barcode number 2")
+elif mybarcode==barcode3:
+    print(mybarcode)
+    print("Barcode number 3")
+else:
+    print(mybarcode)
+    print("Barcode number 4")
 
-#
-
-###########################################################################################################################
-# steer_pair = MoveSteering(OUTPUT_D,OUTPUT_B)
-# steer_pair.on_for_seconds(steering=0, speed=50, seconds=2)
-
-# tank_pair.on_for_seconds(0,70, 90/ANGULAR_ROBO_SPEED)
-# tank_pair.on_for_seconds(70,70, 96/ROBO_SPEED)
-
-# tire_class = EV3Tire
-# mdiff = MoveDifferential(OUTPUT_D, OUTPUT_B, tire_class, 118)
-# sound = Sound()
-
-
-# mdiff.odometry_start()
-# list = []
-# list.append(INITIAL_ANGLE)
-
-
-# for i in range(num_laps):
-
-#     #FORWARD
-#     mdiff.on_for_distance(ROBO_SPEED, Y_DIST/2)
-#     mdiff.turn_degrees(ROBO_SPEED, 10)
-#     mdiff.on_for_distance(ROBO_SPEED, Y_DIST/2)
-
-#     print("Degrees: ",INITIAL_ANGLE - gy.angle,"\n")
-
-#     #BACKWARD
-#     mdiff.on_for_distance(ROBO_SPEED, -Y_DIST/2)
-#     mdiff.turn_degrees(ROBO_SPEED, 10)
-#     mdiff.on_for_distance(ROBO_SPEED, -Y_DIST/2)
-
-#     print("Degrees: ",INITIAL_ANGLE - gy.angle,"\n")
-
-# mdiff.odometry_stop()
-
+sleep(10)

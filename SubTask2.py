@@ -52,22 +52,29 @@ def move_back(tankpair, distance):
 
 def turn(tankpair, direction, gyrosens):
     gyrosens.reset()
-
     if direction==-1:
-        while gyrosens.angle() > -90:
-            tankpair.on_for_seconds(0,70, 1, False)
+        while gyrosens.angle > -90:
+            tankpair.on_for_seconds(0,50, 0.05, False)
     elif direction==1:
-        while gyrosens.angle() < 90:
-            tankpair.on_for_seconds(0,-70, 1, False)
+        while gyrosens.angle < 90:
+            tankpair.on_for_seconds(0,-50, 0.05, False)
 
 def read_colour(color_sensor):
     col = 0
-    if color_sensor.color() == COLOR_WHITE:
+    if color_sensor.color() == 6:
         col = 0
-    elif color_sensor.color() == COLOR_BLACK:
+    elif color_sensor.color() == 1:
         col = 1
-
     return col
+
+def read_black(color_sensor):
+    perc = color_sensor.reflected_light_intensity
+    if perc < 9:
+        return 5
+    elif perc < 40:
+        return 1
+    else:
+        return 0
 
 def brake_robot(tankpair):
     tankpair.off(brake=True)
